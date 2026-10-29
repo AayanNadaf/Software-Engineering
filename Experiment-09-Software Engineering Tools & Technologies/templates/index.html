@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10152e">
+  <title>Login Demo — Welcome</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: light;
+      --ink: #202440;
+      --muted: #8589a3;
+      --purple: #7756e8;
+      --pink: #ec6fa9;
+      --line: #e9eaf2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      overflow-x: hidden;
+      color: var(--ink);
+      font-family: "DM Sans", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(ellipse at 13% 15%, #d9d4ff 0, transparent 34%),
+        radial-gradient(ellipse at 88% 82%, #ffdeeb 0, transparent 32%),
+        #f5f5fb;
+    }
+
+    .orb {
+      position: fixed;
+      z-index: -1;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: .55;
+      animation: drift 10s ease-in-out infinite alternate;
+    }
+
+    .orb.one { top: 5%; right: 8%; background: #c7baff; }
+    .orb.two { bottom: 4%; left: 7%; width: 190px; height: 190px;
+               background: #ffbdd9; animation-delay: -4s; }
+
+    .shell {
+      width: min(960px, 100%);
+      min-height: 590px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      border: 1px solid #ffffffb8;
+      border-radius: 28px;
+      background: #ffffffd9;
+      box-shadow: 0 28px 90px #34335c24;
+      backdrop-filter: blur(16px);
+      animation: appear .7s cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .welcome {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 42px;
+      overflow: hidden;
+      color: white;
+      background: linear-gradient(145deg, #5546c8 0%, #7958e8 52%, #bf62ce 100%);
+    }
+
+    .welcome::before, .welcome::after {
+      position: absolute;
+      content: "";
+      border: 1px solid #ffffff32;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .welcome::before {
+      width: 390px; height: 390px; right: -175px; top: 80px;
+      box-shadow: 0 0 0 34px #ffffff0d, 0 0 0 70px #ffffff0a;
+    }
+
+    .welcome::after {
+      width: 190px; height: 190px; left: -90px; bottom: -45px;
+      box-shadow: 0 0 0 26px #ffffff0d;
+    }
+
+    .brand, .welcome-copy, .welcome-foot { position: relative; z-index: 1; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-family: Manrope, sans-serif;
+      font-weight: 800;
+      letter-spacing: -.3px;
+    }
+
+    .brand-mark {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border: 1px solid #ffffff65;
+      border-radius: 12px;
+      background: #ffffff20;
+      font-size: 18px;
+    }
+
+    .welcome-copy { margin: auto 0; padding: 45px 0; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid #ffffff40;
+      border-radius: 99px;
+      background: #ffffff17;
+      font-size: 12px;
+      letter-spacing: .3px;
+    }
+
+    .eyebrow span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #a5f3c5;
+      box-shadow: 0 0 12px #a5f3c5;
+    }
+
+    h1 {
+      max-width: 390px;
+      margin: 22px 0 16px;
+      font: 800 clamp(34px, 4vw, 48px)/1.12 Manrope, sans-serif;
+      letter-spacing: -1.8px;
+    }
+
+    .welcome-copy p {
+      max-width: 340px;
+      margin: 0;
+      color: #eeeaffd9;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .welcome-foot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #eeeaffc9;
+      font-size: 12px;
+    }
+
+    .avatars { display: flex; padding-left: 3px; }
+    .avatars i {
+      width: 25px; height: 25px;
+      margin-left: -3px;
+      display: grid; place-items: center;
+      border: 2px solid #7758db;
+      border-radius: 50%;
+      background: #f8c5df;
+      color: #553d9b;
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 700;
+    }
+    .avatars i:nth-child(2) { background: #b8e7d3; }
+    .avatars i:nth-child(3) { background: #ffdf9b; }
+
+    .form-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px clamp(28px, 5vw, 62px);
+    }
+
+    .form-wrap { width: min(100%, 350px); }
+
+    .mobile-brand { display: none; }
+
+    .form-heading h2 {
+      margin: 0 0 7px;
+      font: 800 29px Manrope, sans-serif;
+      letter-spacing: -.8px;
+    }
+
+    .form-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin: 28px 0 22px;
+      padding: 4px;
+      border-radius: 11px;
+      background: #f1f0f8;
+    }
+
+    .tab {
+      padding: 10px;
+      border: 0;
+      border-radius: 8px;
+      color: #85859a;
+      background: transparent;
+      font: 600 13px "DM Sans", sans-serif;
+      cursor: pointer;
+      transition: .22s ease;
+    }
+
+    .tab.active {
+      color: var(--purple);
+      background: white;
+      box-shadow: 0 2px 9px #29204c12;
+    }
+
+    form { display: none; animation: slide-in .3s ease both; }
+    form.active { display: block; }
+
+    .field { margin: 16px 0; }
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #464963;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .input-wrap { position: relative; }
+
+    input {
+      width: 100%;
+      height: 47px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: none;
+      color: var(--ink);
+      background: #fff;
+      font: 14px "DM Sans", sans-serif;
+      transition: border .2s, box-shadow .2s, transform .2s;
+    }
+
+    input::placeholder { color: #b1b3c2; }
+
+    input:focus {
+      border-color: #9c86ef;
+      box-shadow: 0 0 0 4px #8769ed19;
+      transform: translateY(-1px);
+    }
+
+    .password-input { padding-right: 55px; }
+
+    .reveal {
+      position: absolute;
+      top: 50%; right: 10px;
+      padding: 5px;
+      transform: translateY(-50%);
+      border: 0;
+      color: #8d8da2;
+      background: transparent;
+      font: 600 11px "DM Sans", sans-serif;
+      cursor: pointer;
+    }
+
+    .options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0 19px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .remember { display: flex; align-items: center; gap: 7px; }
+    .remember input { width: 14px; height: 14px; accent-color: var(--purple); }
+
+    .submit {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 0;
+      border-radius: 9px;
+      color: white;
+      background: linear-gradient(100deg, #6d55dd, #a35ed9);
+      box-shadow: 0 8px 18px #8059df36;
+      font: 700 14px "DM Sans", sans-serif;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s, filter .2s;
+    }
+
+    .submit:hover { transform: translateY(-2px); box-shadow: 0 11px 22px #8059df48; }
+    .submit:active { transform: translateY(0); }
+    .submit:disabled { opacity: .72; cursor: wait; }
+
+    .spinner {
+      display: none;
+      width: 15px; height: 15px;
+      border: 2px solid #ffffff65;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    .submit.loading .spinner { display: inline-block; }
+
+    .message {
+      min-height: 22px;
+      margin: 13px 0 0;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .message.success { color: #21875c; }
+    .message.error { color: #cf4662; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 23px 0 15px;
+      color: #aaaabd;
+      font-size: 11px;
+    }
+    .divider::before, .divider::after { content: ""; height: 1px; flex: 1; background: #ececf2; }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: #9a9bad;
+      font-size: 11px;
+    }
+
+    @keyframes appear { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: none; } }
+    @keyframes slide-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    @keyframes drift { to { transform: translate(24px, -18px) scale(1.08); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 700px) {
+      body { padding: 16px; }
+      .shell { max-width: 470px; min-height: auto; grid-template-columns: 1fr; border-radius: 22px; }
+      .welcome { display: none; }
+      .form-side { padding: 35px 28px; }
+      .mobile-brand { display: flex; margin-bottom: 30px; color: var(--purple); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <main class="shell">
+    <section class="welcome" aria-label="Welcome">
+      <div class="brand"><span class="brand-mark">✦</span> Luma<span>Login</span></div>
+
+      <div class="welcome-copy">
+        <div class="eyebrow"><span></span> Your secure space starts here</div>
+        <h1>Good to see you again.</h1>
+        <p>Sign in to continue your journey. A simple, secure way to pick up right where you left off.</p>
+      </div>
+
+      <div class="welcome-foot">
+        <span class="avatars"><i>A</i><i>M</i><i>J</i></span>
+        <span>Built for a smoother sign-in experience</span>
+      </div>
+    </section>
+
+    <section class="form-side">
+      <div class="form-wrap">
+        <div class="brand mobile-brand"><span class="brand-mark">✦</span> Luma Login</div>
+
+        <header class="form-heading">
+          <h2 id="heading">Welcome back</h2>
+          <p id="subheading">Enter your details to access your account.</p>
+        </header>
+
+        <div class="tabs" role="tablist" aria-label="Choose sign-in or registration">
+          <button class="tab active" id="loginTab" type="button" role="tab" aria-selected="true">Sign in</button>
+          <button class="tab" id="registerTab" type="button" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <form id="loginForm" class="active">
+          <div class="field">
+            <label for="loginUsername">Username</label>
+            <input id="loginUsername" name="username" placeholder="Enter your username"
+                   autocomplete="username" minlength="3" maxlength="100" required>
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrap">
+              <input class="password-input" id="loginPassword" name="password" type="password"
+                     placeholder="Enter your password" autocomplete="current-password" required>
+              <button class="reveal" type="button" data-target="loginPassword">Show</button>
+            </div>
+          </div>
+          <div class="options">
+            <label class="remember"><input type="checkbox"> Remember me</label>
+            <span>Secure login</span>
+          </div>
+          <button class="submit" type="submit"><span class="spinner"></span><span class="button-text">Sign in</span><span>→</span></button>
+        </form>
+
+        <form id="registerForm">
+          <div class="field">
+            <label for="registerUsername">Choose a username</label>
+            <input id="registerUsername" name="username" placeholder="At least 3 characters"
+                   autocomplete="username" minlength="3" maxlength="100" required>
+          </div>
+          <div class="field">
+            <label for="registerPassword">Create a password</label>
+            <div class="input-wrap">
+              <input class="password-input" id="registerPassword" name="password" type="password"
+                     placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required>
+              <button class="reveal" type="button" data-target="registerPassword">Show</button>
+            </div>
+          </div>
+          <button class="submit" type="submit"><span class="spinner"></span><span class="button-text">Create account</span><span>→</span></button>
+        </form>
+
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+        <div class="divider">protected with password hashing</div>
+        <div class="secure-note"><span>🔒</span> Your password is never stored as plain text</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const heading = document.getElementById("heading");
+    const subheading = document.getElementById("subheading");
+    const message = document.getElementById("message");
+
+    function showMode(mode) {
+      const isLogin = mode === "login";
+      loginTab.classList.toggle("active", isLogin);
+      registerTab.classList.toggle("active", !isLogin);
+      loginTab.setAttribute("aria-selected", String(isLogin));
+      registerTab.setAttribute("aria-selected", String(!isLogin));
+      loginForm.classList.toggle("active", isLogin);
+      registerForm.classList.toggle("active", !isLogin);
+      heading.textContent = isLogin ? "Welcome back" : "Create your account";
+      subheading.textContent = isLogin
+        ? "Enter your details to access your account."
+        : "It only takes a moment to get started.";
+      message.textContent = "";
+      message.className = "message";
+    }
+
+    loginTab.addEventListener("click", () => showMode("login"));
+    registerTab.addEventListener("click", () => showMode("register"));
+
+    document.querySelectorAll(".reveal").forEach(button => {
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.target);
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        button.textContent = show ? "Hide" : "Show";
+      });
+    });
+
+    async function submitForm(event, endpoint, form) {
+      event.preventDefault();
+      const button = form.querySelector(".submit");
+      const username = form.querySelector('[name="username"]').value.trim();
+      const password = form.querySelector('[name="password"]').value;
+
+      button.disabled = true;
+      button.classList.add("loading");
+      message.textContent = "Connecting securely…";
+      message.className = "message";
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        const result = await response.json();
+
+        message.textContent = result.message || result.error || "Something went wrong.";
+        message.className = "message " + (response.ok ? "success" : "error");
+
+        if (response.ok && endpoint.endsWith("/register")) {
+          document.getElementById("loginUsername").value = username;
+          showMode("login");
+          message.textContent = "Account created. You can now sign in.";
+          message.className = "message success";
+        }
+      } catch (error) {
+        message.textContent = "Could not reach the server. Check that Flask is running.";
+        message.className = "message error";
+      } finally {
+        button.disabled = false;
+        button.classList.remove("loading");
+      }
+    }
+
+    loginForm.addEventListener("submit", event =>
+      submitForm(event, "/api/login", loginForm)
+    );
+
+    registerForm.addEventListener("submit", event =>
+      submitForm(event, "/api/register", registerForm)
+    );
+  </script>
+</body>
+</html>
